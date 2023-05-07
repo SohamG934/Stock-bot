@@ -1,0 +1,16 @@
+import streamlit as st
+import app
+
+def main():
+    st.title("Login Page")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if username == "myusername" and password == "mypassword":
+            st.success("Login successful!")
+            app.main()  # Opens the new Streamlit app
+        else:
+            st.error("Invalid username or password")
+
+if __name__ == '__main__':
+    main()
