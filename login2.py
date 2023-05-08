@@ -25,18 +25,18 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # Set a background image using CSS
+    page_bg_img = '''
+    <style>
+    body {
+    background-image: url("C:\\Users\\soham\\OneDrive\\Desktop\\bg1.jpg");
+    background-size: cover;
+    }
+    </style>
+    '''
+
+    st.markdown(page_bg_img, unsafe_allow_html=True)
 
 
-# Set a background image using CSS
-page_bg_img = '''
-<style>
-body {
-background-image: url("C/users/soham/OneDrive/Desktop/bg1.jpg");
-background-size: cover;
-}
-</style>
-'''
-
-st.markdown(page_bg_img, unsafe_allow_html=True)
 
 
