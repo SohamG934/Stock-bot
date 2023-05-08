@@ -1,42 +1,64 @@
 import streamlit as st
+import pandas as pd
+import os
 import subprocess
 import app
-import streamlit as st
 
-# Set page config to wide layout and disable the menu
-st.set_page_config(page_title="My Streamlit App", page_icon=":guardsman:", layout="wide")
-hide_menu_style = """
-        <style>
-        #MainMenu {visibility: hidden;}
-        </style>
-        """
-st.markdown(hide_menu_style, unsafe_allow_html=True)
+def create_user(username, password):
+    df = pd.DataFrame({'username': [username], 'password': [password]})
+    if not os.path.exists('users.csv'):
+        df.to_csv('users.csv', index=False)
+    else:
+        existing_df = pd.read_csv('users.csv')
+        if username in existing_df['username'].tolist():
+            st.error('Username already exists!')
+            return
+        df = pd.concat([existing_df, df])
+        df.to_csv('users.csv', index=False)
+    st.success('User created successfully!')
 
-def main():
-    st.title("Login Page")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        if username == "myusername" and password == "mypassword":
-            st.success("Login successful!")
+def login(username, password):
+    if not os.path.exists('users.csv'):
+        st.error('No users found. Please sign up!')
+        return
+    df = pd.read_csv('users.csv')
+    if username in df['username'].tolist():
+        password_match = df[df['username'] == username]['password'].tolist()[0]
+        if password_match == password:
+            st.success('Logged in successfully!')
             subprocess.Popen(['streamlit', 'run', app.__file__])
         else:
-            st.error("Invalid username or password")
+            st.error('Incorrect password!')
+    else:
+        st.error('Username not found!')
+
+def main():
+    st.title('Login or Signup')
+    custom_css = """
+    <style>
+    body {
+        background-image: url("bg1.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+    </style>
+    """
+    st.markdown(custom_css, unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        username = st.text_input('Enter your username')
+
+    with col2:
+        password = st.text_input('Enter your password', type='password')
+
+    if st.button('Signup'):
+        create_user(username, password)
+
+    if st.button('Login'):
+        login(username, password)
 
 if __name__ == '__main__':
     main()
-    # Set a background image using CSS
-    page_bg_img = '''
-    <style>
-    body {
-    background-image: url("C:\\Users\\soham\\OneDrive\\Desktop\\bg1.jpg");
-    background-size: cover;
-    }
-    </style>
-    '''
-
-    st.markdown(page_bg_img, unsafe_allow_html=True)
-
-
-
-

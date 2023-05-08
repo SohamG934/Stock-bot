@@ -22,7 +22,7 @@ def main():
     st.title("STOCK MARKET PREDICTOR")
 
     # ticker=entry.get()
-    ticker=st.text_input("ENTER STOCK TICKER")
+    ticker=st.text_input("ENTER STOCK TICKER", value="AAPL")
     df=data.DataReader(ticker, 'stooq', start, end)
     st.subheader("Data of "+ ticker)
     st.write(df.describe())
